@@ -6,7 +6,7 @@
         <button v-if="isAuth" v-on:click="loadHome">Inicio</button>
         <button v-if="isAuth" v-on:click="loadEmpleados">Empleados</button>
         <button v-if="isAuth" v-on:click="loadCapacitacion">Capacitaciones</button>
-        <button v-if="isAuth" v-on:click="loadRegistros">registros</button>
+        <button v-if="isAuth" v-on:click="loadRegistros">Registros</button>
         <button v-if="isAuth" v-on:click="logOut">Cerrar Sesion</button>
 
         <button v-if="!isAuth" v-on:click="loadLogIn">Iniciar Sesion</button>  
@@ -21,6 +21,9 @@
         v-on:logOut="logOut"
         v-on:capacitacionCreada="capacitacionCreada"
         v-on:capacitacionEliminada="capacitacionEliminada"
+        v-on:registroEliminado="registroEliminado"
+        v-on:registroCreado="registroCreado"
+        v-on:capacitacionActualizada="capacitacionActualizada"
         >
       </router-view>
     </div>
@@ -102,6 +105,7 @@ import axios from 'axios'
         alert("Registro Exitoso");
         this.completedLogIn(data);
       },
+
       capacitacionCreada: function(){
         alert("Capacitacion creada");
         this.$router.push({name: "capacitaciones"})
@@ -109,6 +113,21 @@ import axios from 'axios'
       capacitacionEliminada: function(){
         alert("Capacitacion Eliminada")
         this.$router.push({name: "capacitaciones"})
+      },
+
+      capacitacionActualizada: function(){
+        alert("Capacitacion Actualizada")
+        this.$router.push({name: "capacitaciones"})
+      },
+
+      registroEliminado: function(){
+        alert("Registro Eliminado")
+        this.$router.push({name: "registros"})
+      },
+      
+      registroCreado: function(){
+        alert("Registro Creado");
+        this.$router.push({name: "registros"})
       }
     },
 
@@ -149,7 +168,7 @@ import axios from 'axios'
     width: 100%;
     height: 10vh;
     min-height: 100px;
-    background-color: #A37A07;
+    background-color: #4062BB;
     color:#E5E7E9 ;
     display: flex;
     justify-content: space-between;
@@ -169,11 +188,13 @@ import axios from 'axios'
     top: 15px;
   }
   .header nav button{
+    margin: 3px;
     color: #000000;
-    background: #F0EAB9;
-    border: 1px solid #A37A07;
+    background: #CFDBD5;
+    border: 1px solid #CFDBD5;
     border-radius: 5px;
     padding: 4px 7px;
+    font-size: 15px;
   }
   .header nav button:hover{
     color: #283747;
@@ -181,19 +202,20 @@ import axios from 'axios'
     border: 1px solid #E5E7E9;
   }
   .main-component{
-    height: 75vh;
+    height: 85vh;
     margin: 0%;
     padding: 0%;
-    background:  #F0EAB9;
+    /* background:  #F0EAB9; */
+    background:  #CFDBD5;
   }
   .footer{
     margin: 0%;
     padding: 0%;
     width: 100%;
-    height: 8vh;
-    min-height: 15vh;
+    height: 15vh;
+    min-height: 12vh;
     display: flex;
-    background-color: #A37A07;
+    background-color: #4062BB;
     color: #E5E7E9;
   }
   .footer h2{
@@ -204,3 +226,7 @@ import axios from 'axios'
     align-items: center;
   }
 </style>
+
+/* #A37A07 zapote
+#4062BB azul 
+#CFDBD5*/

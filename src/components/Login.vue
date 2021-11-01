@@ -62,7 +62,7 @@
         align-items: center;
     }
     .containerLoginUser {
-        border: 3px solid #283747;
+        border: 3px solid #283747; 
         border-radius: 15px;
         width: 25%;
         height: 55%;
@@ -72,7 +72,7 @@
         align-items: center;
     }
     .loginUser h2{
-        margin: 5px;
+        margin-bottom: 20px;
         color: #283747;
        
     }
@@ -86,21 +86,21 @@
         padding: 10px 20px;
         margin: 5px 0;
         border: 1px solid #283747;
+        border-radius: 5px;
     }
     .loginUser button{
         font-weight: bold;
         width: 100%;
         height: 40px;
-        color: #E5E7E9;
-        background: #A37A07;
-        border: 1px solid #E5E7E9;
+        background-color: #4062BB;
+        color: blanchedalmond;
+        font-size: 15px;
         border-radius: 5px;
         padding: 10px 25px;
         margin: 5px 0;
     }
     .loginUser button:hover{
-        color: #E5E7E9;
-        background: #78755C;
-        border: 1px solid #283747;
+        background:  #CFDBD5;
+        color: black;
     }
 </style>

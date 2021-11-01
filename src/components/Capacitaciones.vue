@@ -31,13 +31,13 @@
         <div class="botoneracapacitaciones">
                 <button v-on:click="loadCrearCapacitaciones">Crear</button>
                 <div class="delete">
-                <form v-on:submit.prevent="EliminarCapacitacion">
+                <form v-on:submit.prevent="EliminarCapacitaciones">
                 <input type="text" placeholder="ID capacitacion" v-model="id_capa">
                 <button type="submit">Eliminar</button>
                 </form>
                 </div>
                 
-                <button>Editar</button>
+                <button v-on:click="loadUpdateCapacitaciones">Editar</button>
         </div>
     </div> 
 </template>
@@ -134,6 +134,10 @@ export default{
             loadCrearCapacitaciones: function(){
             this.$router.push({name: "crearcapacitaciones"})
             },
+
+            loadUpdateCapacitaciones: function(){
+            this.$router.push({name: "updatecapacitaciones"})
+            },
             
     },
 
@@ -167,13 +171,14 @@ export default{
     }
 
     .divtablerocapacitaciones {
-        scrollbar-color: rgb(189, 189, 162) #F2F0CE;
+        /* scrollbar-color: rgb(189, 189, 162) #F2F0CE; */
+        scrollbar-color: #CFDBD5 #bdc7c2;
         scrollbar-width: 10px;
         overflow:scroll;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 20pc;
+        height: 25pc;
         width:  92%;
         position: absolute;
         left: 3em;
@@ -183,10 +188,11 @@ export default{
     }
     
     .divtablerocapacitaciones table {
-        height: 400px;
+        height: 500px;
         width:100%;
-        background-color: #F2F0CE;
-        font-size: 16px;
+        /* background-color: #F2F0CE; */
+        background-color: #CFDBD5;
+        font-size: 18px;
         font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     }
 
@@ -203,19 +209,20 @@ export default{
         position:absolute; /*El div será ubicado con relación a la pantalla*/
         left:0px; /*A la derecha deje un espacio de 0px*/
         right:0px; /*A la izquierda deje un espacio de 0px*/
-        bottom:125px; /*Abajo deje un espacio de 0px*/
+        bottom:110px; /*Abajo deje un espacio de 0px*/
         height:10px; /*alto del div*/
-        z-index:0;
     } 
 
     .botoneracapacitaciones button{
         height: 35px;
-        width: 130px;
-        border: 2px solid #A37A07;
+        width: 120px;
+        /* border: 2px solid #A37A07; */
         border-radius: 6px;
         margin: 4px 2px;
         font-size: 20px;
-        background: #A37A07;
+        /* background: #A37A07; */
+        background-color: #4062BB;
+        color: blanchedalmond;
         padding: 8px 15px;
         display: flex;
         text-align: center;
@@ -223,8 +230,8 @@ export default{
         align-items: center;
     }
     button:hover {
-        background-color: #b9983c;
-        color: white;
+        background:  #CFDBD5;
+        color: black;
     }
 
     .delete {
@@ -238,7 +245,8 @@ export default{
     .delete input{
         height: 25px;
         width: 100%;
-        display: flex;     
+        display: flex;
+        border-radius: 5px;     
     }
 
     .delete button{

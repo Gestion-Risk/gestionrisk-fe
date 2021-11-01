@@ -37,8 +37,13 @@
         </table>
         </div>
         <div class="botoneraregistros">
-                <button>Crear</button>
-                <button>Eliminar</button>
+                <button v-on:click="loadCrearRegistros">Crear</button>
+                <div class="deleteregistro">
+                <form v-on:submit.prevent="EliminarRegistro">
+                <input type="text" placeholder="ID registro" v-model="id_registro">
+                <button type="submit">Eliminar</button>
+                </form>
+                </div>
         </div>
     </div>
    
@@ -56,6 +61,7 @@ export default{
             return {
                 username: localStorage.getItem("username") || "none",
                 ListaRegistros: null,
+                id_registro:    null,
             }
         },
 
@@ -94,8 +100,46 @@ export default{
             .catch((error) => {
                 this.$emit("logOut");
             })
-        }
-    },
+        },
+            EliminarRegistro: async function(){
+                if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
+                    this.$emit("logOut");
+                return;
+                }
+                await this.verifyToken();
+                let token = localStorage.getItem("tokenAccess");
+
+            axios.delete(
+                `https://gestionrisk-be.herokuapp.com/deleteregistros/${this.id_registro}`,
+                {headers: {'Authorization': `Bearer ${token}`}}
+            ).then(result =>    {
+                console.log(result)
+                this.$emit("registroEliminado");
+                this.getData();
+            })
+            .catch((error) => {
+                alert("El dato introducido es erroneo")
+            })
+        },
+            verifyToken: async function(){
+            return axios.post(
+                /* 'http://localhost:8000/refresh/', */
+                "https://gestionrisk-be.herokuapp.com/refresh/",               
+                {refresh: localStorage.getItem("tokenRefresh")},
+                {headers:{}}
+            )
+            .then((result) => {
+                localStorage.setItem("tokenAccess", result.data.access);
+            })
+            .catch((error) => {
+                this.$emit("logOut");
+            })
+        },
+            loadCrearRegistros: function(){
+                this.$router.push({name: "crearregistros"})
+            },
+        },
+
     created: async function(){
         this.getData();
     }
@@ -124,12 +168,13 @@ export default{
 
     .divregistros {
         scrollbar-color: rgb(189, 189, 162) #F2F0CE;
+        scrollbar-color: #CFDBD5 #bdc7c2;
         scrollbar-width: 10px;
         overflow:scroll;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 20pc;
+        height: 25pc;
         width:  92%;
         position: absolute;
         left: 3em;
@@ -140,9 +185,10 @@ export default{
     
     .divregistros table {
         height: 400px;
-        width:90%;
-        background-color: #F2F0CE;
-        font-size: 15px;
+        width:100%;
+        /* background-color: #F2F0CE; */
+        background-color: #CFDBD5;
+        font-size: 18px;
         font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     }
 
@@ -159,19 +205,19 @@ export default{
         position:absolute; /*El div será ubicado con relación a la pantalla*/
         left:0px; /*A la derecha deje un espacio de 0px*/
         right:0px; /*A la izquierda deje un espacio de 0px*/
-        bottom:125px; /*Abajo deje un espacio de 0px*/
+        bottom:110px; /*Abajo deje un espacio de 0px*/
         height:10px; /*alto del div*/
-        z-index:0;
     } 
 
     .botoneraregistros button{
         height: 35px;
-        width: 130px;
-        border: 2px solid #A37A07;
+        width: 120px;
         border-radius: 6px;
         margin: 4px 2px;
         font-size: 20px;
-        background: #A37A07;
+        /* background: #A37A07; */
+        background-color: #4062BB;
+        color: blanchedalmond;
         padding: 8px 15px;
         display: flex;
         text-align: center;
@@ -179,8 +225,28 @@ export default{
         align-items: center;
     }
     button:hover {
-        background-color: #b9983c;
-        color: white;
+        /* background-color: #b9983c;
+        color: white; */
+        background:  #CFDBD5;
+        color: black;
+    }
+    .deleteregistro {
+        height: 80px;
+        width: 135px;
+        margin: 1rem;
+        padding: 0.3rem;
+        text-align: center;
+    }
+
+    .deleteregistro input{
+        height: 25px;
+        width: 95%;
+        display: flex;
+        border-radius: 5px;     
+    }
+
+    .deleteregistro button{
+        width: 90%;   
     }
 
 </style>

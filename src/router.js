@@ -9,7 +9,8 @@ import Empleados from './components/Empleados.vue'
 import Registros from './components/Registros.vue'
 import Capacitaciones from './components/Capacitaciones'
 import CrearCapacitaciones from './components/CrearCapacitaciones'
-import EliminarCapacitacion from './components/EliminarCapacitacion'
+import CrearRegistros from './components/CrearRegistros'
+import UpdateCapacitaciones from './components/UpdateCapacitaciones'
 
 const routes = [
   {
@@ -53,9 +54,14 @@ const routes = [
     component: CrearCapacitaciones
   },
   {
-    path: '/user/capacitaciones/eliminarcapacitaciones',
-    name: 'eliminarcapacitaciones',
-    component: EliminarCapacitacion
+    path: '/user/registros/crearRegistros',
+    name: 'crearregistros',
+    component: CrearRegistros
+  },
+  {
+    path: '/user/capacitaciones/updatecapacitaciones',
+    name: 'updatecapacitaciones',
+    component: UpdateCapacitaciones,
   }
 
 ];

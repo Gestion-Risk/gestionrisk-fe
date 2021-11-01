@@ -47,7 +47,7 @@
         width          : 100%;     
     }
     .home h1 {
-        padding-top: 15px;
+        padding-top: 20px;
         font-size: 40px;
         color    : #283747;
         display        : flex;
@@ -56,8 +56,8 @@
         
     } 
     .headp , ul{
-        margin-top: 15px;
+        margin-top: 20px;
         margin-left: 40px;
-        font-size: 18px;
+        font-size: 20px;
     }
 </style>

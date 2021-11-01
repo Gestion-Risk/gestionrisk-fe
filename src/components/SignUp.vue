@@ -78,6 +78,7 @@
     }
     .signUpUser h2{
         color: #283747;
+        margin-bottom: 20px;
     }
     .signUpUser form{
         width: 75%;
@@ -89,21 +90,21 @@
         padding: 10px 20px;
         margin: 5px 0;
         border: 1px solid #283747;
+        border-radius: 5px;
     }
     .signUpUser button{
         font-weight: bold;
         width: 100%;
         height: 40px;
-        color: #E5E7E9;
-        background: #A37A07;
-        border: 1px solid #E5E7E9;
+        background-color: #4062BB;
+        color: blanchedalmond;
+        font-size: 15px;
         border-radius: 5px;
         padding: 10px 25px;
         margin: 5px 0 25px 0;
     }
     .signUpUser button:hover{
-        color: #E5E7E9;
-        background: #78755C;
-        border: 1px solid #283747;
+        background:  #CFDBD5;
+        color: black;
     }
 </style>

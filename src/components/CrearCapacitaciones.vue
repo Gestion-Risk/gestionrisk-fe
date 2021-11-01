@@ -52,12 +52,12 @@
         methods:{
             proccesCrearCapacitacion: async function(){
 
-            if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
-                this.$emit("logOut");
-                return;
-            }
-            await this.verifyToken();
-            let token = localStorage.getItem("tokenAccess");
+                if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
+                    this.$emit("logOut");
+                    return;
+                }
+                await this.verifyToken();
+                let token = localStorage.getItem("tokenAccess");
 
             axios.post(
                 "https://gestionrisk-be.herokuapp.com/createcapacitaciones/",
@@ -118,7 +118,6 @@
         }
     },
     created: async function(){
-            /* this.proccesCrearCapacitacion(); */
             this.getAreaList();
     }
 }
@@ -140,7 +139,7 @@
 }
 
 .formcontent{
-    border: 3px solid #283747;
+    border: 2px solid #283747;
     border-radius: 15px;
     width: 25%;
     height: 65%;
@@ -150,7 +149,7 @@
     align-items: center;
     float: right;
     margin-right: 115px;
-    margin-top: 60px;
+    margin-top: 80px;
 
 }
 
@@ -162,16 +161,17 @@
     font-weight: bold;
     width: 100%;
     height: 40px;
-    color: #000000;
-    background: hsl(47, 71%, 51%);
+    color: blanchedalmond;
+    font-size: 15px;
+    background-color: #4062BB;
     border-radius: 5px;
     padding: 10px 25px;
     margin: 5px 0 25px 0;
 }
 
 .formcontent form button:hover {
-        background-color: #b9983c;
-        color: white;
+        background:  #CFDBD5;
+        color: black;
     }
 
 .formcontent form select, input {
@@ -181,6 +181,7 @@
     padding: 10px 20px;
     margin: 10px 0;
     border: 1px solid #283747;
+    border-radius: 5px;
 }
 
 .imagecontent {
@@ -189,8 +190,11 @@
 }
 .imagecontent img{
     margin: 15px;
-    height: 400px;
-    width: 500px;
+    height: 450px;
+    width: 550px;
+    border: 1px solid black;
     border-radius: 10px;
+    margin: 40px;
+    margin-left: 100px;
 }
 </style>

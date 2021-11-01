@@ -112,13 +112,14 @@ export default{
         width: 15%;  
     }
     .divempleados {
-        scrollbar-color: rgb(189, 189, 162) #F2F0CE;
+        /* scrollbar-color: rgb(189, 189, 162) #F2F0CE; */
+        scrollbar-color: #CFDBD5 #bdc7c2;
         scrollbar-width: 10px;
         overflow:scroll;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 20pc;
+        height: 25pc;
         width:  92%;
         position: absolute;
         left: 3em;
@@ -128,10 +129,11 @@ export default{
     }
     
     .divempleados table {
-        height: 400px;
+        height: 500px;
         width:100%;
-        background-color: #F2F0CE;
-        font-size: 16px;
+        /* background-color: #F2F0CE; */
+        background-color: #CFDBD5;
+        font-size: 18px;
         font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     }
 
