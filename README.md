@@ -1,4 +1,4 @@
-# Backend - Django Rest-Framework
+# FrontEnd - VueJS
 Proyecto personal de aprendizaje, Frontend hecho con Vuejs.
 
 Funciones:
