@@ -1,4 +1,4 @@
-# gestionrisk-fe
+# Backend - Django Rest-Framework
 Proyecto personal de aprendizaje, Frontend hecho con Vuejs.
 
 Funciones:
