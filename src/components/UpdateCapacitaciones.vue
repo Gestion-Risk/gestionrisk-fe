@@ -1,61 +1,58 @@
 <template>
-    <div>
-        <div class="headerupdatecapacitacion">
-        <h1>Editar Capacitacion</h1>
+    <div class="updatecapcon">
+        <div class="headerupdatecap">
+            <h1>Editar Capacitacion</h1>
         </div>
-        <div>
-        <div class="imagecontentupdatecapacitacion">
-            <div class="divtableroupdatecapa">
-            <table border="1px">
-            <thead>
-                <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Curso</th>
-                <th scope="col">fecha</th>
-                <th scope="col">hora</th>
-                <th scope="col">Area</th>
-                <th scope="col">Descripcion</th>      
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="capacitacion in listaCapacitaciones" :key="capacitacion.id_capacitacion">
-                    <th scope="row">{{capacitacion.id_capacitacion}}</th>
-                    <td>{{capacitacion.curso}}</td>
-                    <td>{{capacitacion.fecha}}}</td>
-                    <td>{{capacitacion.hora}}</td>
-                    <td>{{capacitacion.idAreaCapacitacionFk_id.area}}</td>
-                    <td>{{capacitacion.idAreaCapacitacionFk_id.descripcion}}</td>
-                </tr>
-            </tbody>
-        </table>
-        <form class="buscador" v-on:submit.prevent="getCapacitacionesUpdate">
-            <input type="text" placeholder="Buscar por ID capacitacion" v-model="idcapa">
-            <button>Buscar</button>
-        </form>
-        </div>
-        </div>
-        <div class="formcontentupdatecapacitacion">
-        <form v-on:submit.prevent="updateCapacitaciones">
-                <input type="text"  placeholder="ID capacitacion" v-model="capacitaciones.id_capacitacion">
-                <br>
-                <input type="text"  placeholder="Curso" v-model="capacitaciones.curso">
-                <br />
-                <select v-model="capacitaciones.idAreaCapacitacionFk">
-                    <option disabled selected>Selecciona Area...</option>
-                    <option v-for="area in areas" :key="area.idAreaCap" :value="area.idAreaCap">
-                        {{area.area}}</option>
-                </select>
-                <br />
-                <input type="date" placeholder="Fecha" v-model="capacitaciones.fecha">
-                <br />
-                <input type="time" placeholder="Hora" v-model="capacitaciones.hora">
-                <br />
-                <button type="submit">Actualizar</button>
-        </form> 
-        </div>
+
+        <div class="contentupdatecap">
+            <div class="tableupdatecap">
+                <table border="1px">
+                <thead>
+                    <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Curso</th>
+                    <th scope="col">fecha</th>
+                    <th scope="col">hora</th>
+                    <th scope="col">Area</th>
+                    <th scope="col">Descripcion</th>      
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="capacitacion in listaCapacitaciones" :key="capacitacion.id_capacitacion">
+                        <th scope="row">{{capacitacion.id_capacitacion}}</th>
+                        <td>{{capacitacion.curso}}</td>
+                        <td>{{capacitacion.fecha}}</td>
+                        <td>{{capacitacion.hora}}</td>
+                        <td>{{capacitacion.idAreaCapacitacionFk_id.area}}</td>
+                        <td>{{capacitacion.idAreaCapacitacionFk_id.descripcion}}</td>
+                    </tr>
+                </tbody>
+                </table>
+                <div class="buscadorcon">
+                <form class="buscador" v-on:submit.prevent="getCapacitacionesUpdate">
+                    <input type="text" placeholder="Buscar por ID capacitacion" v-model="idcapa">
+                    <button>Buscar</button>
+                </form>
+                </div>
+            </div>     
+        
+
+            <div class="formupdatecap">
+                <form v-on:submit.prevent="updateCapacitaciones">
+                    <input type="text"  placeholder="ID capacitacion" v-model="capacitaciones.id_capacitacion">
+                    <input type="text"  placeholder="Curso" v-model="capacitaciones.curso">
+                    <select v-model="capacitaciones.idAreaCapacitacionFk">
+                        <option disabled selected>Selecciona Area...</option>
+                        <option v-for="area in areas" :key="area.idAreaCap" :value="area.idAreaCap">
+                            {{area.area}}</option>
+                    </select>        
+                    <input type="date" placeholder="Fecha" v-model="capacitaciones.fecha">             
+                    <input type="time" placeholder="Hora" v-model="capacitaciones.hora">
+                    <button type="submit">Actualizar</button>
+                </form> 
+            </div>
         </div>
     </div>
-   
 </template>
 
 
@@ -99,7 +96,11 @@
                         this.$emit("capacitacionActualizada");
                     })
                     .catch((error) => {
-                        alert("Revise los datos introducidos")
+                        this.$swal({
+                            title: 'Revise los datos introducidos',
+                            icon: 'error'
+                        })
+                        
                     })         
                     },
                     verifyToken: async function(){
@@ -134,10 +135,16 @@
                     })
                     .catch((error) => {
                     if(error.response.status == "401") {
-                        alert("Usted no está autorizado para realizar esta operación.");
+                        this.$swal({
+                            title: 'Usted no está autorizado para realizar esta operación.',
+                            icon: 'error'
+                        })
                     }
                     else if(error.response.status == "500"){
-                        alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
+                        this.$swal({
+                            title: 'La plataforma está presentando problemas.\nIntente de nuevo más tarde.',
+                            icon: 'error'
+                        })
                     }
                 })
              },
@@ -184,122 +191,136 @@
 
 
 <style>
-.headerupdatecapacitacion {
-    padding-left: 40px;
-    padding-top: 15px;
+
+.updatecapcon{
+    display: grid;
+    grid-template-rows: auto 1fr;
+    margin-bottom: 3.5em;
+    gap: 1em;
 }
 
-.headerupdatecapacitacion h1{
-    width: 100%;
+
+.headerupdatecap{
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 2em 2.5em 0 2.5em;
     text-align: center;
 }
 
-.formcontentupdatecapacitacion{
-    border: 3px solid #283747;
+.contentupdatecap{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    margin: 2em 2.5em 0 2.5em;
+    margin-bottom: 3.5em;
+    gap: 1em;
+}
+
+.tableupdatecap{
+    display: grid;
+    grid-template-columns: 1fr; 
+    scrollbar-color: #CFDBD5 #bdc7c2;
+    height: 25em;
+    width:  100%;
+}
+
+.tableupdatecap table{
+    width:100%;
+    background-color: white;
+    font-size: 18px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    border: 2px solid #283747; 
+    border-collapse: collapse;
+}
+
+.tableupdatecap table td,th{
+    padding: 2px;
+    } 
+
+.formupdatecap{
+    border: 2px solid #283747;
     border-radius: 15px;
-    width: 25%;
-    height: 65%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    float: right;
-    margin-right: 60px;
-    margin-top: 50px;
 
 }
 
-.formcontentupdatecapacitacion form {
+.formupdatecap form, option{
     width: 75%;
+    padding: 2em;
 }
 
-.formcontentupdatecapacitacion form button{
+.formupdatecap form button{
     font-weight: bold;
     width: 100%;
-    height: 40px;
+    height: 35px;
+    color: blanchedalmond;
+    font-size: 18px;
+    background-color: #4062BB;
+    border-radius: 5px;
+    margin: 5px 0 25px 0;
+}
+
+.formupdatecap form button:hover{
+    background:  #CFDBD5;
+    color: black;
+}
+
+.formupdatecap form select, input {
+    height: 35px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    margin: 0.5em 0;
+    border: 1px solid #283747;
+    border-radius: 5px;
+    font-size: 15px;
+}
+
+.tableupdatecap form input{
+    height: 30px;
+    width: 55%;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    margin: 0.5em 0;
+    border: 1px solid #283747;
+    border-radius: 5px;
+    font-size: 15px;
+    margin: auto 3em;
+}
+
+.tableupdatecap form button{
+    font-weight: bold;
+    width: 20%;
+    height: 30px;
     color: blanchedalmond;
     font-size: 15px;
     background-color: #4062BB;
     border-radius: 5px;
-    padding: 10px 25px;
-    margin: 5px 0 25px 0;
+
+    margin: auto 3em;
+    text-align: center;
+
 }
 
-.formcontentupdatecapacitacion form button:hover {
-        background:  #CFDBD5;
-        color: black;
-    }
-
-.formcontentupdatecapacitacion form select, input {
-    height: 40px;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 10px 20px;
-    margin: 10px 0;
-    border: 1px solid #283747;
+.tableupdatecap form button:hover {
+    background:  #CFDBD5;
+    color: black;
 }
 
-.imagecontentupdatecapacitacion {
-    float: left;
-    width: 45%;
+.buscadorcon{
+    display: grid;
+    grid-template-rows: auto; 
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+    padding: 0.5em;
 }
-.imagecontentupdatecapacitacion img{
-    margin: 15px;
-    height: 400px;
-    width: 500px;
-    border-radius: 10px;
+
+.buscadorcon form button{
+    margin-top: 0.3em;
 }
-
-.divtableroupdatecapa {
-        /* scrollbar-color: #CFDBD5 #bdc7c2;
-        scrollbar-width: 10px;
-        overflow:scroll; */
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width:  63%;
-        position: absolute;
-        left: 3em;
-        top: 14em;
-        right: 0;
-        bottom: 2em;
-    }
-    
-    .divtableroupdatecapa table {
-        border-radius: 10px;
-        height: 120px;
-        width:100%;
-        background-color: #CFDBD5;
-        font-size: 18px;
-        font-family:'Gill Sans', 'Gill Sans MT','Trebuchet MS', sans-serif;
-    }
-
-    .divtableroupdatecapa table td,th{
-       padding: 4px;
-    }
-
-    .buscador {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 4px;
-    }
-    .buscador input {
-        height: 25px;
-        border-radius: 5px;
-        width: 200px;
-
-    }
-    .buscador button {
-        height: 25px;
-        width: 80px;
-        border-radius: 5px;
-        background-color: #4062BB;
-        color: blanchedalmond;   
-        font-size: 15px; 
-    }
-    .buscador button:hover{
-        background:  #CFDBD5;
-        color: black;
-    }
 </style>

@@ -1,37 +1,41 @@
 <template>
-    <div>
+    <div class="empleadoscontainer">
         <div class="headerempleados">
-        <h1>Lista de empleados</h1>
-        <p>Usario:<b>{{username}}</b></p>
+            <div class="title">
+                <h1>Lista de empleados</h1>
+                <p>Usario:<b>{{username}}</b></p>
+            </div>
+            <div class="note">
+                <p><span style="font-weight: bold;">Nota:</span> &nbsp; Para hacer la busqueda mas eficiente pulse las teclas Ctrl + F para iniciar una busqueda por Cedula.</p>
+            </div>
         </div>
         <div class="divempleados">
-            <table border="1px">
-            <thead>
-                <tr>
-                <th scope="col">Cedula</th>
-                <th scope="col">Nombres</th>
-                <th scope="col">Apellidos</th>
-                <th scope="col">Email</th>
-                <th scope="col">Cargo</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="trabajador in ListaTrabajadores" :key="trabajador.cedula">
-                    <th scope="row">{{trabajador.cedula}}</th>
-                    <td>{{trabajador.nombres}}</td>
-                    <td>{{trabajador.apellidos}}</td>
-                    <td>{{trabajador.email}}</td>
-                    <td>{{trabajador.cargoIdFk.cargo}}</td>
-                </tr>
-            </tbody>
-        </table>
+            <div class="tableempleados">
+                <table border="1px">
+                <thead>
+                    <tr>
+                    <th scope="col">Cedula</th>
+                    <th scope="col">Nombres</th>
+                    <th scope="col">Apellidos</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Cargo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="trabajador in ListaTrabajadores" :key="trabajador.cedula">
+                        <th scope="row">{{trabajador.cedula}}</th>
+                        <td>{{trabajador.nombres}}</td>
+                        <td>{{trabajador.apellidos}}</td>
+                        <td>{{trabajador.email}}</td>
+                        <td>{{trabajador.cargoIdFk.cargo}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
         </div>
     </div>
    
 </template>
-
-
-/* _________________________ */
 
 
 <script>
@@ -56,10 +60,8 @@ export default{
 
             await this.verifyToken();
             let token = localStorage.getItem("tokenAccess");
-            /* let userId = jwt_decode(token).user_id.toString(); */
 
             axios.get(
-                /* "http://localhost:8000/listalltrabajadores/", */
                 "https://gestionrisk-be.herokuapp.com/listalltrabajadores/",
                 {headers: {'Authorization': `Bearer ${token}`}}
             ).then((result) => {
@@ -72,7 +74,6 @@ export default{
 
         verifyToken: async function(){
             return axios.post(
-                /* 'http://localhost:8000/refresh/', */
                 "https://gestionrisk-be.herokuapp.com/refresh/",
                 {refresh: localStorage.getItem("tokenRefresh")},
                 {headers:{}}
@@ -96,48 +97,94 @@ export default{
 /* _________________________ */
 
 <style>
-    .headerempleados {
-        padding-left: 40px;
-        padding-top: 15px;    
+
+.empleadoscontainer{
+    display: grid;
+    grid-template-rows: auto auto;
+    margin-bottom: 3.5em;
+}
+
+.headerempleados{
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 2em 2.5em 0 2.5em;
+}
+
+.title{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.note{
+    margin-bottom: 1em;
+    display: flex;
+    text-align: left;
+}
+
+
+.headerempleados h1{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+
+}
+.headerempleados p{
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}   
+
+.divempleados{
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 0.5em 3em 3em 3em;
+}
+
+.tableempleados{
+    display: grid;
+    grid-template-columns: 1fr; 
+    scrollbar-color: #CFDBD5 #bdc7c2;
+    overflow:scroll;
+    height: 25em;
+    width:  100%;
+}
+
+ .divempleados table {
+    width:100%;
+    background-color: white;
+    font-size: 18px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    border: 3px solid #283747; 
+    border-radius: 1em;
     }
 
-    .headerempleados h1{
-        margin: 12px;
-        display: inline-block;
-        width: 80%;          
-    }
+.divempleados table td,th{
+    padding: 2px;
+    } 
 
-    .headerempleados p{
-        display: inline-block;
-        width: 15%;  
-    }
-    .divempleados {
-        /* scrollbar-color: rgb(189, 189, 162) #F2F0CE; */
-        scrollbar-color: #CFDBD5 #bdc7c2;
-        scrollbar-width: 10px;
-        overflow:scroll;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 25pc;
-        width:  92%;
-        position: absolute;
-        left: 3em;
-        top: 12em;
-        right: 0;
-        bottom: 2em;
-    }
-    
-    .divempleados table {
-        height: 500px;
-        width:100%;
-        /* background-color: #F2F0CE; */
-        background-color: #CFDBD5;
-        font-size: 18px;
-        font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    }
-
-    .divempleados table td,th{
-       padding: 4px;
-    }
+@media screen and (max-width: 600px) {
+       table {
+           width:100%;
+       }
+       thead {
+           display: none;
+       }
+       tr:nth-of-type(2n) {
+           background-color: inherit;
+       }
+       tr td:first-child {
+           background: #f0f0f0;
+           font-weight:bold;
+           font-size:1.3em;
+       }
+       tbody td {
+           display: block;
+           text-align:center;
+       }
+       tbody td:before {
+           content: attr(data-th);
+           display: block;
+           text-align:center;
+       }
+}
 </style>

@@ -1,29 +1,25 @@
 <template>
-    <div>
+    <div class="crearcapcontainer">
         <div class="headercrearcapacitacion">
-        <h1>Crear Capacitacion</h1>
+            <h1>Crear Capacitacion</h1>
         </div>
-        <div>
+    <div class="formcrearcon">
         <div class="imagecontent">
             <img v-bind:src="require('/src/assets/capacitacion.jpg')" alt="">
         </div>
         <div class="formcontent">
-        <form v-on:submit.prevent="proccesCrearCapacitacion">
+            <form v-on:submit.prevent="proccesCrearCapacitacion">
                 <input type="text"  placeholder="Curso" v-model="capacitaciones.curso">
-                <br />
                 <select v-model="capacitaciones.idAreaCapacitacionFk">
                     <option disabled selected>Selecciona Area...</option>
                     <option v-for="area in areas" :key="area.idAreaCap" :value="area.idAreaCap">
                         {{area.area}}</option>
                 </select>
-                <br />
                 <input type="date" placeholder="Fecha" v-model="capacitaciones.fecha">
-                <br />
                 <input type="time" placeholder="Hora" v-model="capacitaciones.hora">
-                <br />
                 <button type="submit">Crear</button>
-        </form> 
-        </div>
+            </form> 
+            </div>
         </div>
     </div>
    
@@ -61,7 +57,6 @@
 
             axios.post(
                 "https://gestionrisk-be.herokuapp.com/createcapacitaciones/",
-                /* "http://localhost:8000/createcapacitaciones/", */
                 this.capacitaciones,
                 {headers: {'Authorization': `Bearer ${token}`}}
             )
@@ -70,14 +65,15 @@
                 this.$emit("capacitacionCreada");
             })
             .catch((error) => {
-                alert("Error en el modelo")
-                /* this.$emit("logOut"); */
+                this.$swal({
+                    title: 'Error en el modelo',
+                    icon: 'warning'
+                })
             })
         },
 
         verifyToken: async function(){
             return axios.post(
-                /* 'http://localhost:8000/refresh/', */
                 "https://gestionrisk-be.herokuapp.com/refresh/",               
                 {refresh: localStorage.getItem("tokenRefresh")},
                 {headers:{}}
@@ -101,7 +97,6 @@
 
             axios.get(
                 "https://gestionrisk-be.herokuapp.com/listareas/",
-                /* "http://127.0.0.1:8000/listareas/", */
                 {headers: {'Authorization': `Bearer ${token}`}}
             ).then((result) => {
                 console.log("data obtained")
@@ -109,10 +104,16 @@
             })
             .catch((error) => {
                 if(error.response.status == "401") {
-                    alert("Usted no está autorizado para realizar esta operación.");
+                    this.$swal({
+                            title: 'Usted no está autorizado para realizar esta operación.',
+                            icon: 'error'
+                    })
                 }
                 else if(error.response.status == "500"){
-                    alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
+                    this.$swal({
+                            title: 'La plataforma está presentando problemas.\nIntente de nuevo más tarde.',
+                            icon: 'error'
+                    })
                 }
             })
         }
@@ -128,33 +129,49 @@
 
 
 <style>
-.headercrearcapacitacion {
-    padding-left: 40px;
-    padding-top: 15px;
+
+.crearcapcontainer{
+    display: grid;
+    grid-template-rows: auto 1fr;
+    margin-bottom: 3.5em;
+    gap: 1em;
 }
 
-.headercrearcapacitacion h1{
-    width: 100%;
+
+
+.headercrearcapacitacion{
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 2em 2.5em 0 2.5em;
     text-align: center;
 }
+
+.formcrearcon{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    margin: 3em;
+    gap: 1em;
+}
+
+.imagecontent img{
+    width: 800px;
+    height: 400px;
+    max-width: 100%;
+    border-radius: 1em;
+} 
 
 .formcontent{
     border: 2px solid #283747;
     border-radius: 15px;
-    width: 25%;
-    height: 65%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    float: right;
-    margin-right: 115px;
-    margin-top: 80px;
-
 }
 
-.formcontent form {
-    width: 75%;
+.formcontent form, option{
+    width: 70%;
+    padding: 2em;
 }
 
 .formcontent form button{
@@ -165,8 +182,8 @@
     font-size: 15px;
     background-color: #4062BB;
     border-radius: 5px;
-    padding: 10px 25px;
     margin: 5px 0 25px 0;
+    font-size: 20px;
 }
 
 .formcontent form button:hover {
@@ -175,26 +192,13 @@
     }
 
 .formcontent form select, input {
-    height: 40px;
+    height: 35px;
     width: 100%;
     box-sizing: border-box;
-    padding: 10px 20px;
-    margin: 10px 0;
+    padding: 5px 10px;
+    margin: 1em 0;
     border: 1px solid #283747;
     border-radius: 5px;
-}
-
-.imagecontent {
-    float: left;
-    width: 45%;
-}
-.imagecontent img{
-    margin: 15px;
-    height: 450px;
-    width: 550px;
-    border: 1px solid black;
-    border-radius: 10px;
-    margin: 40px;
-    margin-left: 100px;
+    font-size: 18px;
 }
 </style>

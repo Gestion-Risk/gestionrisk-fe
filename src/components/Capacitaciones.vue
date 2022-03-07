@@ -1,147 +1,152 @@
 <template>
-    <div>
+    <div class="capacitacionescon">
         <div class="headercapacitaciones">
-        <h1>Lista de Capacitaciones</h1>
-        <p>Usario:<b>{{username}}</b></p>
+            <h1>Lista de Capacitaciones</h1>
+            <p>Usario:<b>{{username}}</b></p>
+           
         </div>
-        <div class="divtablerocapacitaciones">
-            <table border="1px">
-            <thead>
-                <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Curso</th>
-                <th scope="col">fecha</th>
-                <th scope="col">hora</th>
-                <th scope="col">Area</th>
-                <th scope="col">Descripcion</th>      
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="capacitacion in ListaCapacitaciones" :key="capacitacion.id_capacitacion">
-                    <th scope="row">{{capacitacion.id_capacitacion}}</th>
-                    <td>{{capacitacion.curso}}</td>
-                    <td>{{capacitacion.fecha}}</td>
-                    <td>{{capacitacion.hora}}</td>
-                    <td>{{capacitacion.idAreaCapacitacionFk_id.area}}</td>
-                    <td>{{capacitacion.idAreaCapacitacionFk_id.descripcion}}</td>
-                </tr>
-            </tbody>
-        </table>
-        </div>
-        <div class="botoneracapacitaciones">
-                <button v-on:click="loadCrearCapacitaciones">Crear</button>
-                <div class="delete">
-                <form v-on:submit.prevent="EliminarCapacitaciones">
-                <input type="text" placeholder="ID capacitacion" v-model="id_capa">
-                <button type="submit">Eliminar</button>
-                </form>
+        <div class="tablebuttoncon">
+            <div class="tablecapacitaciones">
+                <table border="1px">
+                <thead>
+                    <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Curso</th>
+                    <th scope="col">fecha</th>
+                    <th scope="col">hora</th>
+                    <th scope="col">Area</th>
+                    <th scope="col">Descripcion</th>      
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="capacitacion in ListaCapacitaciones" :key="capacitacion.id_capacitacion">
+                        <th scope="row">{{capacitacion.id_capacitacion}}</th>
+                        <td>{{capacitacion.curso}}</td>
+                        <td>{{capacitacion.fecha}}</td>
+                        <td>{{capacitacion.hora}}</td>
+                        <td>{{capacitacion.idAreaCapacitacionFk_id.area}}</td>
+                        <td>{{capacitacion.idAreaCapacitacionFk_id.descripcion}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+            <div class="botoneracapacitaciones">
+                <div class="creareditarcon">
+                    <button v-on:click="loadCrearCapacitaciones">Crear</button>
+                    <button v-on:click="loadUpdateCapacitaciones">Editar</button>
                 </div>
-                
-                <button v-on:click="loadUpdateCapacitaciones">Editar</button>
+                <div class="deletecon">
+                    <form v-on:submit.prevent="EliminarCapacitaciones">
+                        <div class="notacon">
+                            <p><b>Nota:</b> Introduzca el Id del curso que desee eliminar, despues pulse el boton eliminar.</p>
+                        </div>
+                        <div class="deleteallcon">
+                            <input type="text" placeholder="ID capacitacion" v-model="id_capa">
+                            <button type="submit">Eliminar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div> 
 </template>
 
-/* _________________________ */
 
 <script>
 import axios from 'axios';
 
 export default{
-        name: "Capacitaciones",
+    name: "Capacitaciones",
 
-        data: function(){
-            return {
-                username: localStorage.getItem("username") || "none",
-                ListaCapacitaciones: null,
-                id_capa: null,
-            }
-        },
+    data: function(){
+        return {
+            username: localStorage.getItem("username") || "none",
+            ListaCapacitaciones: null,
+            id_capa: null,
+        }
+    },
 
-        methods:{
-            getData: async function(){
-            if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
-                    this.$emit("logOut");
-                    return;
-            }
+    methods:{
+        getData: async function(){
+        if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
+            this.$emit("logOut");
+            return;
+        }
 
-            await this.verifyToken();
-            let token = localStorage.getItem("tokenAccess");
+        await this.verifyToken();
+        let token = localStorage.getItem("tokenAccess");
 
-            axios.get(
-                /* "http://localhost:8000/listcapacitaciones/", */
-                "https://gestionrisk-be.herokuapp.com/listcapacitaciones/",
-                {headers: {'Authorization': `Bearer ${token}`}}
-            ).then((result) => {
-                this.ListaCapacitaciones = result.data
+        axios.get(
+            "https://gestionrisk-be.herokuapp.com/listcapacitaciones/",
+            {headers: {'Authorization': `Bearer ${token}`}}
+        ).then((result) => {
+            this.ListaCapacitaciones = result.data
+        })
+        .catch((error) => {
+            this.$emit("logOut");
+        })
+    },
+
+    verifyToken: async function(){
+        return axios.post(
+            "https://gestionrisk-be.herokuapp.com/refresh/",               
+            {refresh: localStorage.getItem("tokenRefresh")},
+            {headers:{}}
+        )
+        .then((result) => {
+            localStorage.setItem("tokenAccess", result.data.access);
+        })
+        .catch((error) => {
+            this.$emit("logOut");
+        })
+    },
+
+    EliminarCapacitacion: async function(){
+        if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
+            this.$emit("logOut");
+            return;
+        }
+
+        await this.verifyToken();
+        let token = localStorage.getItem("tokenAccess");
+
+        axios.delete(
+            `https://gestionrisk-be.herokuapp.com/deletecapacitaciones/${this.id_capa}`,
+            {headers: {'Authorization': `Bearer ${token}`}}
+        ).then(result => {
+            this.$emit("capacitacionEliminada");
+        })
+        .catch((error) => {
+            this.$swal({
+                title: 'El dato introducido es erroneo',
+                icon: 'error'
             })
-            .catch((error) => {
-                this.$emit("logOut");
-            })
-        },
-
-        verifyToken: async function(){
-            return axios.post(
-                /* 'http://localhost:8000/refresh/', */
-                "https://gestionrisk-be.herokuapp.com/refresh/",               
-                {refresh: localStorage.getItem("tokenRefresh")},
-                {headers:{}}
-            )
-            .then((result) => {
-                localStorage.setItem("tokenAccess", result.data.access);
-            })
-            .catch((error) => {
-                this.$emit("logOut");
-            })
-
-        },
-
-            EliminarCapacitacion: async function(){
-                if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
-                    this.$emit("logOut");
-                    return;
-            }
-
-            await this.verifyToken();
-            let token = localStorage.getItem("tokenAccess");
-
-            axios.delete(
-                `https://gestionrisk-be.herokuapp.com/deletecapacitaciones/${this.id_capa}`,
-                {headers: {'Authorization': `Bearer ${token}`}}
-            ).then(result => {
-                console.log(result)
-                this.$emit("capacitacionEliminada");
-            })
-            .catch((error) => {
-                alert("El dato introduciodo es erroneo")
-            })
-            
-        },
-            verifyToken: async function(){
-            return axios.post(
-                /* 'http://localhost:8000/refresh/', */
-                "https://gestionrisk-be.herokuapp.com/refresh/",               
-                {refresh: localStorage.getItem("tokenRefresh")},
-                {headers:{}}
-            )
-            .then((result) => {
-                localStorage.setItem("tokenAccess", result.data.access);
-            })
-            .catch((error) => {
-                this.$emit("logOut");
-            })
-        },
-            loadCrearCapacitaciones: function(){
-            this.$router.push({name: "crearcapacitaciones"})
-            },
-
-            loadUpdateCapacitaciones: function(){
-            this.$router.push({name: "updatecapacitaciones"})
-            },
+        })
             
     },
 
-    
+    verifyToken: async function(){
+        return axios.post(
+            "https://gestionrisk-be.herokuapp.com/refresh/",               
+            {refresh: localStorage.getItem("tokenRefresh")},
+            {headers:{}}
+        )
+        .then((result) => {
+            localStorage.setItem("tokenAccess", result.data.access);
+        })
+        .catch((error) => {
+            this.$emit("logOut");
+        })
+    },
+
+    loadCrearCapacitaciones: function(){
+        this.$router.push({name: "crearcapacitaciones"})
+    },
+
+    loadUpdateCapacitaciones: function(){
+        this.$router.push({name: "updatecapacitaciones"})
+    },      
+    },
 
     created: async function(){
         this.getData();
@@ -151,105 +156,121 @@ export default{
 </script>
 
 
-/* _________________________ */
 
 <style>
-    .headercapacitaciones {
-        padding-left: 40px;
-        padding-top: 15px;
-    }
-    .headercapacitaciones h1{
-        margin: 12px;
-        display: inline-block;
-        width: 80%;       
+
+.capacitacionescon{
+    display: grid;
+    grid-template-rows: auto auto;
+    margin-bottom: 4.5em;
+}
+
+.headercapacitaciones{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 2em 2.5em 0 2.5em;
+}
+
+.headercapacitaciones h1{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.headercapacitaciones p{
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.tablebuttoncon{
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    margin: 2em 2.5em;
+    gap: 2em;
+}
+
+
+.tablecapacitaciones{
+    display: grid;
+    grid-template-columns: 1fr; 
+    scrollbar-color: #CFDBD5 #bdc7c2;
+    overflow:scroll;
+    height: 20em;
+    width:  100%;
+}
+
+.tablecapacitaciones table{
+    width:100%;
+    background-color: white;
+    font-size: 18px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    border: 3px solid #283747; 
+    border-radius: 1em;
+}
+
+.tablecapacitaciones table td,th{
+       padding: 2px;
     }
 
-    .headercapacitaciones p{
-        display: inline-block;
-        width: 15%;
-    
-    }
+.botoneracapacitaciones{
+    display: grid;
+    grid-template-rows: auto auto;
+    padding: 1em;
+}
 
-    .divtablerocapacitaciones {
-        /* scrollbar-color: rgb(189, 189, 162) #F2F0CE; */
-        scrollbar-color: #CFDBD5 #bdc7c2;
-        scrollbar-width: 10px;
-        overflow:scroll;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 25pc;
-        width:  92%;
-        position: absolute;
-        left: 3em;
-        top: 12em;
-        right: 0;
-        bottom: 2em;
-    }
-    
-    .divtablerocapacitaciones table {
-        height: 500px;
-        width:100%;
-        /* background-color: #F2F0CE; */
-        background-color: #CFDBD5;
-        font-size: 18px;
-        font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    }
+.creareditarcon{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7.4em;
+}
 
-    .divtablerocapacitaciones table td,th{
-       padding: 4px;
-    }
+.creareditarcon button{
+    font-family: "Raleway", "Arial", sans-serif;
+    height: 30px;
+    width: 80px;
+    border-radius: 5px;
+    font-size: 18px;
+    background-color: #4062BB;
+    color: rgb(255, 255, 255);
+}
+  button:hover {
+    background:  #234cbd;
+    color: rgb(255, 255, 255);
+}
 
-    .botoneracapacitaciones {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        text-align: center;
-        align-items: center;
-        position:absolute; /*El div será ubicado con relación a la pantalla*/
-        left:0px; /*A la derecha deje un espacio de 0px*/
-        right:0px; /*A la izquierda deje un espacio de 0px*/
-        bottom:110px; /*Abajo deje un espacio de 0px*/
-        height:10px; /*alto del div*/
-    } 
+.deletecon form{
+    display: grid;
+    grid-template-rows: auto auto;
+    margin: 0;
+}
 
-    .botoneracapacitaciones button{
-        height: 35px;
-        width: 120px;
-        /* border: 2px solid #A37A07; */
-        border-radius: 6px;
-        margin: 4px 2px;
-        font-size: 20px;
-        /* background: #A37A07; */
-        background-color: #4062BB;
-        color: blanchedalmond;
-        padding: 8px 15px;
-        display: flex;
-        text-align: center;
-        justify-content: center;
-        align-items: center;
-    }
-    button:hover {
-        background:  #CFDBD5;
-        color: black;
-    }
 
-    .delete {
-        height: 80px;
-        width: 135px;
-        margin: 1rem;
-        padding: 0.3rem;
-        text-align: center;
-    }
+.notacon{
+    text-align: justify;
+    margin: 0;
+}
 
-    .delete input{
-        height: 25px;
-        width: 100%;
-        display: flex;
-        border-radius: 5px;     
-    }
+.deleteallcon{
+    text-align: center;
+}
 
-    .delete button{
-        width: 97%;   
-    }
+.deleteallcon input{
+    margin: 0.5em;
+    height: 40px;
+    width: 100%;
+    border-radius: 5px;  
+    text-align: center;
+}
+
+.deleteallcon button{
+    font-family: "Raleway", "Arial", sans-serif;
+    height: 30px;
+    width: 80px;
+    border-radius: 5px;
+    font-size: 18px;
+    background-color: #4062BB;
+    color: rgb(255, 255, 255);
+}
+
 </style>

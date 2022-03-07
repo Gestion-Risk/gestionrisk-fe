@@ -1,28 +1,27 @@
 <template>
-    <div>
+    <div class="crearregcon">
         <div class="headerregistro">
-        <h1>Crear Registro</h1>
+            <h1>Crear Registro</h1>
         </div>
-        <div>
-        <div class="imagecontentregistro">
-            <img v-bind:src="require('/src/assets/registros.jpg')" alt="">
-        </div>
-        <div class="formcontentregistro">
-        <form v-on:submit.prevent="proccesCrearRegistro">
-                <input type="text"  placeholder="Cedula Trabajador" v-model="registros.cedulaTrabajador">
-                <br />
-                <select v-model="registros.idCapacitacionFk">
-                    <option disabled selected>Selecciona Capacitacion...</option>
-                    <option v-for="capa in capacitaciones" :key="capa.id_capacitacion" :value="capa.id_capacitacion">
-                        {{capa.curso}}</option>
-                </select>
-                <br />
-                <button type="submit">Crear</button>
-        </form> 
-        </div>
+
+        <div class="bodycrearreg">
+            <div class="imagecontentregistro">
+                <img v-bind:src="require('/src/assets/registros.jpg')" alt="">
+            </div>
+
+            <div class="formcontentregistro">
+                <form v-on:submit.prevent="proccesCrearRegistro">
+                    <input type="text"  placeholder="Cedula Trabajador" v-model="registros.cedulaTrabajador">
+                    <select v-model="registros.idCapacitacionFk">
+                        <option disabled selected>Selecciona Capacitacion...</option>
+                        <option v-for="capa in capacitaciones" :key="capa.id_capacitacion" :value="capa.id_capacitacion">
+                            {{capa.curso}}</option>
+                    </select>
+                    <button type="submit">Crear</button>
+                </form> 
+            </div>
         </div>
     </div>
-   
 </template>
 
 <script>
@@ -60,12 +59,14 @@
                     this.$emit("registroCreado");
                 })
                 .catch((error) => {
-                    alert("Trabajador no disponible")
+                    this.$swal({
+                            title: 'Trabajador no disponible',
+                            icon: 'warning'
+                        })
                 })
                 },
                 verifyToken: async function(){
                 return axios.post(
-                    /* 'http://localhost:8000/refresh/', */
                     "https://gestionrisk-be.herokuapp.com/refresh/",               
                     {refresh: localStorage.getItem("tokenRefresh")},
                     {headers:{}}
@@ -96,10 +97,16 @@
                     })
                     .catch((error) => {
                         if(error.response.status == "401") {
-                            alert("Usted no está autorizado para realizar esta operación.");
+                            this.$swal({
+                                title: 'Usted no está autorizado para realizar esta operación.',
+                                icon: 'error'
+                            })
                         }
                         else if(error.response.status == "500"){
-                            alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
+                            this.$swal({
+                                title: 'La plataforma está presentando problemas.\nIntente de nuevo más tarde.',
+                                icon: 'error'
+                            })
                         }
                     })
                     },
@@ -122,10 +129,16 @@
                     .catch ((error) => {
                         console.log("data no obtained")
                         if(error.response.status == "401") {
-                            alert("Usted no está autorizado para realizar esta operación.");
+                            this.$swal({
+                                title: 'Usted no está autorizado para realizar esta operación.',
+                                icon: 'error'
+                            })
                         }
                         else if(error.response.status == "500"){
-                            alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
+                            this.$swal({
+                                title: 'La plataforma está presentando problemas.\nIntente de nuevo más tarde.',
+                                icon: 'error'
+                            })
                         }
                     })
                 }
@@ -139,36 +152,57 @@
 </script>
 
 
-
-
 <style>
-.headerregistro {
-    padding-left: 40px;
-    padding-top: 15px;
+
+.crearregcon{
+    display: grid;
+    grid-template-rows: auto 1fr;
+    margin-bottom: 3.5em;
+    gap: 1em;
 }
 
-.headerregistro h1{
-    width: 100%;
+.imagecontentregistro{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    margin-bottom: 3.5em;
+    gap: 1em;
+}
+
+
+.headerregistro{
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 2em 2.5em 0 2.5em;
     text-align: center;
 }
 
+.bodycrearreg{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    margin: 2em 2.5em 0 2.5em;
+    text-align: center;
+}
+
+.imagecontentregistro img{
+    width: 800px;
+    height: 400px;
+    max-width: 140%;
+    border-radius: 1em;
+} 
+
 .formcontentregistro{
-    border: 3px solid #283747;
+    height: 87%;
+    border: 2px solid #283747;
     border-radius: 15px;
-    width: 25%;
-    height: 65%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    float: right;
-    margin-right: 115px;
-    margin-top: 100px;
-
 }
 
-.formcontentregistro form {
-    width: 75%;
+.formcontentregistro form, option{
+    width: 80%;
+    padding: 2em;
 }
 
 .formcontentregistro form button{
@@ -176,10 +210,9 @@
     width: 100%;
     height: 40px;
     color: blanchedalmond;
-    font-size: 15px;
+    font-size: 18px;
     background-color: #4062BB;
     border-radius: 5px;
-    padding: 10px 25px;
     margin: 5px 0 25px 0;
 }
 
@@ -189,25 +222,16 @@
     }
 
 .formcontentregistro form select, input {
-    height: 40px;
+    height: 35px;
     width: 100%;
     box-sizing: border-box;
-    padding: 10px 20px;
-    margin: 10px 0;
+    padding: 5px 10px;
+    margin: 1em 0;
     border: 1px solid #283747;
+    border-radius: 5px;
+    font-size: 18px;
+    text-align: center;
 }
 
-.imagecontentregistro {
-    float: left;
-    width: 45%;
-}
-.imagecontentregistro img{
-    margin: 15px;
-    height: 450px;
-    width: 550px;
-    border: 1px solid black;
-    border-radius: 10px;
-    margin: 40px;
-    margin-left: 100px;
-}
+
 </style>

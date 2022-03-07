@@ -3,15 +3,19 @@
         <div class="containerLoginUser">
             <h2>Iniciar Sesión</h2>
             <form v-on:submit.prevent="processLogInUser" method="POST">
-                <input type="text" v-model="user.username" placeholder="username">
-                <br />
-                <input type="password" v-model="user.password" placeholder="password">
-                <br />
-                <button type="submit">Iniciar Sesión</button>
+                <div class="inisecion1">
+                    <input type="text" v-model="user.username" placeholder="Username" required>
+                </div>
+                <div class="inisecion1">
+                    <input type="password" v-model="user.password" placeholder="Password" required>
+                </div>
+                <div class="botoncontain">
+                    <button type="submit">Iniciar Sesión</button>
+                </div>
             </form>
         </div>
     </div>
-</template>
+</template>         
 
 <script>
     import axios from 'axios';
@@ -29,7 +33,6 @@
         methods: {
             processLogInUser: function(){
                 axios.post(
-                    /* 'http://localhost:8000/login/', */
                     "https://gestionrisk-be.herokuapp.com/login/",
                     this.user,
                     {headers:{}}
@@ -44,7 +47,10 @@
                 })
                 .catch((error) => {
                     if(error.response.status == "401")
-                        alert("Las credenciales son incorrectas.");
+                        this.$swal({
+                            title: 'Credenciales Incorrectas',
+                            icon: 'error'
+                        })
                 });
             }
         }
@@ -52,55 +58,72 @@
 </script>
 
 <style>
-    .loginUser{
-        margin: 0;
-        padding: 0%;
-        height: 100%;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .containerLoginUser {
-        border: 3px solid #283747; 
-        border-radius: 15px;
-        width: 25%;
-        height: 55%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    .loginUser h2{
-        margin-bottom: 20px;
-        color: #283747;
-       
-    }
-    .loginUser form{
-        width: 75%;
-    }
-    .loginUser input{
-        height: 40px;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 10px 20px;
-        margin: 5px 0;
-        border: 1px solid #283747;
-        border-radius: 5px;
-    }
-    .loginUser button{
-        font-weight: bold;
-        width: 100%;
-        height: 40px;
-        background-color: #4062BB;
-        color: blanchedalmond;
-        font-size: 15px;
-        border-radius: 5px;
-        padding: 10px 25px;
-        margin: 5px 0;
-    }
-    .loginUser button:hover{
-        background:  #CFDBD5;
-        color: black;
-    }
+
+.loginUser{
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-bottom: 3.5em;
+}
+
+.containerLoginUser{
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 5.5em auto;
+    border: 3px solid #283747; 
+    border-radius: 1em;
+    padding: 2em;
+}
+
+.containerLoginUser h2{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 25px;
+    margin-bottom: 0.5em;
+    color: #283747;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.inisecion1{
+  font-family: 'Courier New', Courier, monospace;
+  margin: 1em;
+}
+
+.inisecion1 input{
+  font-family: 'Courier New', Courier, monospace;
+  padding: 0.3em;
+  margin-top: 0.5em;
+  width: 100%;
+  height: 1.8em;
+  font-size: 18px;
+  border: none;
+  border-radius: 0px;
+  border-bottom: 1px solid black;
+}
+
+
+.containerLoginUser button{
+    font-size: 18px;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+
+
+    background-color: #4062BB;
+    color: white;
+
+    border-radius: 0.5em;
+    padding: 0.5em;
+    margin-top: 0.8em;
+    border: none;
+}
+
+.botoncontain{
+  display: flex;
+  justify-content: center;
+}
+
+.botoncontain button:hover{
+    background:  #081863;
+    color: blanchedalmond;
+}
 </style>
