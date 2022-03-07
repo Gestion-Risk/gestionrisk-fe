@@ -1,17 +1,21 @@
 <template>
   <div id="app" class="app">
     <div class="header">
-      <h1>Gestion Capacitaciones<br /> G03 - P8</h1>
-      <nav>
-        <button v-if="isAuth" v-on:click="loadHome">Inicio</button>
-        <button v-if="isAuth" v-on:click="loadEmpleados">Empleados</button>
-        <button v-if="isAuth" v-on:click="loadCapacitacion">Capacitaciones</button>
-        <button v-if="isAuth" v-on:click="loadRegistros">Registros</button>
-        <button v-if="isAuth" v-on:click="logOut">Cerrar Sesion</button>
+      <div class="left-header">
+        <h1>Gestión <br/>Capacitaciones</h1>
+      </div>
+      <div id="right-header" class="right-header">
+        <nav>
+          <button v-if="isAuth" v-on:click="loadHome">Inicio</button>
+          <button v-if="isAuth" v-on:click="loadEmpleados">Empleados</button>
+          <button v-if="isAuth" v-on:click="loadCapacitacion">Capacitaciones</button>
+          <button v-if="isAuth" v-on:click="loadRegistros">Registros</button>
+          <button v-if="isAuth" v-on:click="logOut">Cerrar Sesión</button>
 
-        <button v-if="!isAuth" v-on:click="loadLogIn">Iniciar Sesion</button>  
-        <button v-if="!isAuth" v-on:click="loadSignUp">Registrarse</button>
-      </nav>
+          <button v-if="!isAuth" v-on:click="loadLogIn">Iniciar Sesion</button>  
+          <button v-if="!isAuth" v-on:click="loadSignUp">Registrarse</button>
+        </nav>
+      </div>
     </div>
 
     <div class="main-component">
@@ -80,7 +84,10 @@ import axios from 'axios'
       logOut: function(){
         let token  = localStorage.getItem("token");
         localStorage.clear();
-        alert("Sesion Cerrada");
+        this.$swal({
+          title: 'Sesion Terminada',
+          icon: 'success'
+        })
         this.verifyAuth();
       },
 
@@ -97,36 +104,62 @@ import axios from 'axios'
         localStorage.setItem('tokenRefresh', data.tokenRefresh);
         localStorage.setItem('tokenAccess', data.tokenAccess);
         localStorage.setItem('isAuth', true);
-        alert("Autenticacion Exitosa");
+         this.$swal({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          icon: 'success',
+          title: 'Autenticacion Exitosa',
+        })
         this.verifyAuth()
       },
 
       completedSignUp: function(data){
-        alert("Registro Exitoso");
+        this.$swal({
+          title: 'Registro Exitoso',
+          icon: 'success'
+        })
         this.completedLogIn(data);
       },
 
       capacitacionCreada: function(){
-        alert("Capacitacion creada");
+        this.$swal({
+          title: 'Capacitacion creada',
+          icon: 'success'
+        })
         this.$router.push({name: "capacitaciones"})
       },
       capacitacionEliminada: function(){
-        alert("Capacitacion Eliminada")
+        this.$swal({
+          title: 'Capacitacion Eliminada',
+          icon: 'success'
+        })
         this.$router.push({name: "capacitaciones"})
       },
 
       capacitacionActualizada: function(){
-        alert("Capacitacion Actualizada")
+        this.$swal({
+          title: 'Capacitacion Actualizada',
+          icon: 'success'
+        })
         this.$router.push({name: "capacitaciones"})
       },
 
       registroEliminado: function(){
-        alert("Registro Eliminado")
+        this.$swal({
+          title: 'Registro Eliminado',
+          icon: 'success'
+        })
         this.$router.push({name: "registros"})
       },
       
       registroCreado: function(){
-        alert("Registro Creado");
+        this.$swal({
+          title: 'Registro Creado',
+          icon: 'success'
+        })
         this.$router.push({name: "registros"})
       }
     },
@@ -142,91 +175,89 @@ import axios from 'axios'
 
 <style>
 
-  html, body {
-    margin: 0; 
-    padding: 0;
-  } 
-  p {
-    margin: 0 0 3px 0; 
-    padding: 0;
-  } 
-  h1, h2, h3, h4, h5, h6 {
-    margin: 0 0 2px 0; 
-    padding: 0;
-    } 
-  form {
-    margin: 0; 
-    padding: 0;
-    }
+@import url('https://fonts.googleapis.com/css2?family=Redressed&display=swap');
 
-  body {
-    max-width: 0 0 0 0;
-  }
-  .header{
-    margin: 0px;
-    padding: 0px;
-    width: 100%;
-    height: 10vh;
-    min-height: 100px;
-    background-color: #4062BB;
-    color:#E5E7E9 ;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .header h1{
-    width: 50%;
-    text-align: center;
-  }
-  .header nav {
-    height: 50%;
-    width: 25%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    font-size: 20px;
-    top: 15px;
-  }
-  .header nav button{
-    margin: 3px;
-    color: #000000;
-    background: #CFDBD5;
-    border: 1px solid #CFDBD5;
-    border-radius: 5px;
-    padding: 4px 7px;
-    font-size: 15px;
-  }
-  .header nav button:hover{
-    color: #283747;
-    background: #E5E7E9;
-    border: 1px solid #E5E7E9;
-  }
-  .main-component{
-    height: 85vh;
-    margin: 0%;
-    padding: 0%;
-    /* background:  #F0EAB9; */
-    background:  #CFDBD5;
-  }
-  .footer{
-    margin: 0%;
-    padding: 0%;
-    width: 100%;
-    height: 15vh;
-    min-height: 12vh;
-    display: flex;
-    background-color: #4062BB;
-    color: #E5E7E9;
-  }
-  .footer h2{
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 2px 0; 
+  padding: 0;
+} 
+
+html{
+  min-height: 100%;
+  position: relative;
+}
+
+body {
+  margin: 0;
+  margin-bottom: 2em;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #4062BB;
+}
+
+.left-header {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.2em;
+  margin-left: 2em;
+}
+
+.left-header h1{
+  font-family: 'Redressed', cursive;
+  margin: 0px;
+  color:#E5E7E9;
+  font-size: 40px;
+  text-align: center;
+}
+
+.right-header nav{
+  float: right;
+  margin-right: 2em;
+}
+
+.right-header nav button{
+  color: black;
+  background: white;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+  
+  border: 1px solid #3a3b28;
+  border-radius: 0.5em;
+  padding: 0.2em;
+  margin: 0.5em;
+  width: 10.5em;
+  max-width: 65%;
+}
+
+.right-header nav button:hover{
+  color: #283747;
+  background: #E5E7E9;
+}
+
+
+.footer{
+  font-family: "Raleway", "Arial", sans-serif;
+  color: #E5E7E9;
+  text-align: center;
+  background-color: #4062BB;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  font-size: 18px;
+}
+
+.footer h2{
+  padding: 0.4em;
+  font-size: 25px;
+}
 </style>
 
-/* #A37A07 zapote
-#4062BB azul 
-#CFDBD5*/
+

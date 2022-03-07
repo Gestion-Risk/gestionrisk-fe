@@ -3,15 +3,21 @@
         <div class="containerSignUpUser">
             <h2>Registrarse</h2>
             <form v-on:submit.prevent="processSignUp">
-                <input type="text"  v-model="user.username" placeholder="Username">
-                <br />
-                <input type="password" v-model="user.password" placeholder="Password">
-                <br />
-                <input type="text" v-model="user.name" placeholder="Nombre">
-                <br />
-                <input type="email" v-model="user.email" placeholder="email">
-                <br />
-                <button type="submit">Registrarse</button>
+                <div class="inisecion1">
+                    <input type="text"  v-model="user.username" placeholder="Username" required>
+                </div>
+                <div class="inisecion1">
+                    <input type="password" v-model="user.password" placeholder="Password" required>
+                </div>
+                <div class="inisecion1">
+                    <input type="text" v-model="user.name" placeholder="Nombre" required>
+                </div>
+                <div class="inisecion1">
+                    <input type="email" v-model="user.email" placeholder="Email" required>
+                </div>
+                <div class="botoncontain">
+                    <button type="submit">Registrarse</button>
+                </div>
             </form>
         </div>
     </div>
@@ -35,7 +41,6 @@
         methods:{
             processSignUp:function(){
                 axios.post(
-                    /* 'http://localhost:8000/createuser/', */
                     "https://gestionrisk-be.herokuapp.com/createuser/",
                     this.user,
                     {headers:{}}
@@ -48,8 +53,10 @@
                     this.$emit('completedSignUp', dataSignUp)
                 })
                 .catch((error) => {
-                    console.log(error)
-                    alert("Error. Fallo en el registro de usuario.");
+                    this.$swal({
+                        title: 'Fallo en el registro. Intentelo de nuevo',
+                        icon: 'error'
+                    })
                 }); 
             }
         }
@@ -57,7 +64,46 @@
 </script>
 
 <style>
-    .signUpUser{
+
+.signUpUser{
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-bottom: 3.5em;
+}
+
+.containerSignUpUser{
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 4em auto;
+    border: 3px solid #283747; 
+    border-radius: 1em;
+    padding: 2em;
+}
+
+.containerSignUpUser h2{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 25px;
+    margin-bottom: 0.5em;
+    color: #283747;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+.containerSignUpUser button{
+    font-size: 18px;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+
+
+    background-color: #4062BB;
+    color: blanchedalmond;
+
+    border-radius: 0.5em;
+    padding: 0.5em;
+    margin-top: 0.8em;
+    border: none;
+}
+    /* .signUpUser{
         margin: 0;
         padding: 0%;
         height: 100%;
@@ -106,5 +152,5 @@
     .signUpUser button:hover{
         background:  #CFDBD5;
         color: black;
-    }
+    } */
 </style>

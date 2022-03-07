@@ -1,49 +1,54 @@
 <template>
-    <div>
-        <div class="headerregistros">
-        <h1>Lista de Registros</h1>
-        <p>Usario:<b>{{username}}</b></p>
+    <div class="registroscontainer">
+        <div class="headercapacitaciones">
+            <h1>Lista de Registros</h1>
+            <p>Usario:<b>{{username}}</b></p>
         </div>
+
         <div class="divregistros">
-            <table border="1px">
-            <thead>
-                <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Cedula</th>
-                <th scope="col">Nombres</th>
-                <th scope="col">Apellidos</th>
-                <th scope="col">email</th>
-                <th scope="col">cargo</th>
-                <th scope="col">curso</th>
-                <th scope="col">fecha</th>
-                <th scope="col">hora</th>
-                <th scope="col">Area</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="registro in ListaRegistros" :key="registro.idRegistro">
-                    <th scope="row">{{registro.idRegistro}}</th>
-                    <td>{{registro.cedulaTrabajador}}</td>
-                    <td>{{registro.cedulaTrabajadorFk.nombres}}</td>
-                    <td>{{registro.cedulaTrabajadorFk.apellidos}}</td>
-                    <td>{{registro.cedulaTrabajadorFk.email}}</td>
-                    <td>{{registro.cedulaTrabajadorFk.cargoIdFk.cargo}}</td>
-                    <td>{{registro.idCapacitacionFk.curso}}</td>
-                    <td>{{registro.idCapacitacionFk.fecha}}</td>
-                    <td>{{registro.idCapacitacionFk.hora}}</td>
-                    <td>{{registro.idCapacitacionFk.idAreaCapacitacionFk.area}}</td>
-                </tr>
-            </tbody>
-        </table>
+            <div class="tableregistros">
+                <table border="1px">
+                    <thead>
+                        <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Cedula</th>
+                        <th scope="col">Nombres</th>
+                        <th scope="col">Apellidos</th>
+                        <th scope="col">email</th>
+                        <th scope="col">cargo</th>
+                        <th scope="col">curso</th>
+                        <th scope="col">fecha</th>
+                        <th scope="col">hora</th>
+                        <th scope="col">Area</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="registro in ListaRegistros" :key="registro.idRegistro">
+                            <th scope="row">{{registro.idRegistro}}</th>
+                            <td>{{registro.cedulaTrabajador}}</td>
+                            <td>{{registro.cedulaTrabajadorFk.nombres}}</td>
+                            <td>{{registro.cedulaTrabajadorFk.apellidos}}</td>
+                            <td>{{registro.cedulaTrabajadorFk.email}}</td>
+                            <td>{{registro.cedulaTrabajadorFk.cargoIdFk.cargo}}</td>
+                            <td>{{registro.idCapacitacionFk.curso}}</td>
+                            <td>{{registro.idCapacitacionFk.fecha}}</td>
+                            <td>{{registro.idCapacitacionFk.hora}}</td>
+                            <td>{{registro.idCapacitacionFk.idAreaCapacitacionFk.area}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="botoneraregistros">
-                <button v-on:click="loadCrearRegistros">Crear</button>
-                <div class="deleteregistro">
+            <div>
+            <button v-on:click="loadCrearRegistros">Crear</button>
+            </div>
+            <div class="deleteregistro">
                 <form v-on:submit.prevent="EliminarRegistro">
-                <input type="text" placeholder="ID registro" v-model="id_registro">
-                <button type="submit">Eliminar</button>
+                    <input type="text" placeholder="ID registro" v-model="id_registro">
+                    <button type="submit">Eliminar</button>
                 </form>
-                </div>
+            </div>
         </div>
     </div>
    
@@ -76,7 +81,6 @@ export default{
             let token = localStorage.getItem("tokenAccess");
 
             axios.get(
-                /* "http://localhost:8000/listallregistros/", */
                 "https://gestionrisk-be.herokuapp.com/listallregistros/",
                 {headers: {'Authorization': `Bearer ${token}`}}
             ).then((result) => {
@@ -89,7 +93,6 @@ export default{
 
         verifyToken: async function(){
             return axios.post(
-                /* 'http://localhost:8000/refresh/', */
                 "https://gestionrisk-be.herokuapp.com/refresh/",
                 {refresh: localStorage.getItem("tokenRefresh")},
                 {headers:{}}
@@ -118,12 +121,14 @@ export default{
                 this.getData();
             })
             .catch((error) => {
-                alert("El dato introducido es erroneo")
+                this.$swal({
+                    title: 'El dato introducido es erroneo',
+                    icon: 'error'
+                })
             })
         },
             verifyToken: async function(){
             return axios.post(
-                /* 'http://localhost:8000/refresh/', */
                 "https://gestionrisk-be.herokuapp.com/refresh/",               
                 {refresh: localStorage.getItem("tokenRefresh")},
                 {headers:{}}
@@ -151,102 +156,64 @@ export default{
 /* _________________________ */
 
 <style>
-    .headerregistros{
-        padding-left: 40px;
-        padding-top: 15px;
-    }
-    .headerregistros h1{
-        margin: 12px;
-        display: inline-block;
-        width: 80%;             
-    }
 
-    .headerregistros p{
-        display: inline-block;
-        width: 15%;
-    }
+.registroscontainer{
+    display: grid;
+    grid-template-rows: auto auto auto;
+    margin-bottom: 3.5em;
+}
 
-    .divregistros {
-        scrollbar-color: rgb(189, 189, 162) #F2F0CE;
-        scrollbar-color: #CFDBD5 #bdc7c2;
-        scrollbar-width: 10px;
-        overflow:scroll;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 25pc;
-        width:  92%;
-        position: absolute;
-        left: 3em;
-        top: 12em;
-        right: 0;
-        bottom: 2em;
-    }
-    
-    .divregistros table {
-        height: 400px;
-        width:100%;
-        /* background-color: #F2F0CE; */
-        background-color: #CFDBD5;
-        font-size: 18px;
-        font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    }
+.divregistros{
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 1em 2.5em;
+}
 
-    .divregistros table td,th{
-       padding: 4px;
-    }
+.tableregistros{
+    display: grid;
+    grid-template-columns: 1fr; 
+    scrollbar-color: #CFDBD5 #bdc7c2;
+    overflow:scroll;
+    height: 20em;
+    width:  100%;
+}
 
-    .botoneraregistros {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        text-align: center;
-        align-items: center;
-        position:absolute; /*El div será ubicado con relación a la pantalla*/
-        left:0px; /*A la derecha deje un espacio de 0px*/
-        right:0px; /*A la izquierda deje un espacio de 0px*/
-        bottom:110px; /*Abajo deje un espacio de 0px*/
-        height:10px; /*alto del div*/
-    } 
+.tableregistros table{
+    width:100%;
+    background-color: white;
+    font-size: 15px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    border: 3px solid #283747; 
+    border-radius: 1em;
+    text-align: center;
+}
 
-    .botoneraregistros button{
-        height: 35px;
-        width: 120px;
-        border-radius: 6px;
-        margin: 4px 2px;
-        font-size: 20px;
-        /* background: #A37A07; */
-        background-color: #4062BB;
-        color: blanchedalmond;
-        padding: 8px 15px;
-        display: flex;
-        text-align: center;
-        justify-content: center;
-        align-items: center;
-    }
-    button:hover {
-        /* background-color: #b9983c;
-        color: white; */
-        background:  #CFDBD5;
-        color: black;
-    }
-    .deleteregistro {
-        height: 80px;
-        width: 135px;
-        margin: 1rem;
-        padding: 0.3rem;
-        text-align: center;
-    }
 
-    .deleteregistro input{
-        height: 25px;
-        width: 95%;
-        display: flex;
-        border-radius: 5px;     
-    }
+.botoneraregistros{
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    margin: 0 0 2em 0;
+    text-align: center;
+}
 
-    .deleteregistro button{
-        width: 90%;   
-    }
+.botoneraregistros button{
+    font-family: "Raleway", "Arial", sans-serif;
+    height: 30px;
+    width: 80px;
+    border-radius: 5px;
+    font-size: 18px;
+    background-color: #4062BB;
+    color: rgb(255, 255, 255);
+}
+
+.botoneraregistros input{
+    margin: 0.5em;
+    height: 35px;
+    width: 15%;
+    border-radius: 5px;  
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
 
 </style>
